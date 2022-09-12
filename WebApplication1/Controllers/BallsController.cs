@@ -52,6 +52,15 @@ namespace WebApplication1.Controllers
         public async Task<IActionResult> Put(string type, int amount)
         {
             QuerySnapshot dataw = await db.Collection("ball").WhereEqualTo(new FieldPath("type"), type).GetSnapshotAsync();
+            if (dataw.Count == 0)
+            {
+                return NotFound(new { message = "Object not found" });
+
+            }
+            if (dataw[0].ConvertTo<BallPublic>().StockLeft-amount < 0)
+            {
+                return NotFound(new { message = "No stock left." });
+            }
             Dictionary<string, object> user = new()
             {
                 { "user_id",User.FindFirstValue("user_id") },
@@ -64,11 +73,7 @@ namespace WebApplication1.Controllers
 };
 
 
-            if (dataw.Count == 0)
-            {
-                return NotFound(new { message = "Object not found" });
 
-            }
             _ = await dataw[0].Reference.UpdateAsync(updates);
             return Ok(new
             {
