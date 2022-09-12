@@ -1,7 +1,8 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Linq;
 using System.Security.Cryptography.X509Certificates;
-namespace FirebaseAuthWebApi
+
+namespace WebApplication1
 {
     public class FirebaseAuthConfig
     {

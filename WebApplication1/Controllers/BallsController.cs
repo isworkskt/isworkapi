@@ -11,7 +11,7 @@ namespace WebApplication1.Controllers
     [ApiController]
     public class BallsController : ControllerBase
     {
-        readonly FirestoreDb db = FirestoreDb.Create("iswork-d8ed0");
+        private readonly FirestoreDb db = FirestoreDb.Create("iswork-d8ed0");
 
 
         // GET: api/<BallsController>
@@ -62,7 +62,7 @@ namespace WebApplication1.Controllers
             {
     { "users", FieldValue.ArrayUnion(user) },
 };
-            
+
 
             if (dataw.Count == 0)
             {

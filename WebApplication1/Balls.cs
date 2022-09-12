@@ -1,4 +1,5 @@
-﻿using Google.Cloud.Firestore;
+﻿using FirebaseAdmin.Auth;
+using Google.Cloud.Firestore;
 using System.Text.Json.Serialization;
 
 namespace WebApplication1
@@ -53,13 +54,23 @@ namespace WebApplication1
     {
         [FirestoreProperty("user_id")]
         [JsonPropertyName("user_id")]
-        public string? Uid { get; set; }
+        [JsonIgnore]
+        public string Uid { get; set; } = "";
+        public string Email => GetEmail(Uid).Result;
+
+        public async Task<string> GetEmail(string Uid)
+        {
+            UserRecord d = await FirebaseAuth.DefaultInstance.GetUserAsync(Uid);
+               return d.Email;
+        }
+
         [FirestoreProperty("amount")]
         [JsonPropertyName("amount")]
         public int Amount { get; set; }
         [FirestoreProperty("date")]
-        [JsonPropertyName("date")]
+        [JsonIgnore]
         public Timestamp Date { get; set; }
+        public DateTime Time => Date.ToDateTime().ToLocalTime();
         public User()
         {
             Uid = Uid;
