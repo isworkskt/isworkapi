@@ -1,6 +1,7 @@
 ﻿using Google.Cloud.Firestore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Runtime.InteropServices;
 using System.Security.Claims;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -12,8 +13,13 @@ namespace WebApplication1.Controllers
     public class BallsController : ControllerBase
     {
         private readonly FirestoreDb db = FirestoreDb.Create("iswork-d8ed0");
-
-
+        [Authorize]
+        [HttpGet("Borrowed")]
+        public async Task<BallPublic[]> GetBorrowed()
+        {
+            QuerySnapshot dataw = await db.Collection("ball").WhereArrayContains(new FieldPath("users"), User.FindFirstValue("user_id")).GetSnapshotAsync();
+            return dataw.Documents.Select(x => x.ConvertTo<BallPublic>()).ToArray();
+        }
         // GET: api/<BallsController>
         [HttpGet("Public")]
         public async Task<BallPublic[]> GetPublic()
@@ -57,7 +63,7 @@ namespace WebApplication1.Controllers
                 return NotFound(new { message = "Object not found" });
 
             }
-            if (dataw[0].ConvertTo<BallPublic>().StockLeft-amount < 0)
+            if (dataw[0].ConvertTo<BallPublic>().StockLeft - amount < 0)
             {
                 return NotFound(new { message = "No stock left." });
             }

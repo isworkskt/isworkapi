@@ -61,7 +61,7 @@ namespace WebApplication1
         public async Task<string> GetEmail(string Uid)
         {
             UserRecord d = await FirebaseAuth.DefaultInstance.GetUserAsync(Uid);
-               return d.Email;
+            return d.Email;
         }
 
         [FirestoreProperty("amount")]
